@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.noelh.tourguide.service.TourGuideService;
 import com.noelh.tourguide.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ import tripPricer.Provider;
 
 @RestController
 @RequestMapping("")
-//annotation slf4g
+@Slf4j
 public class TourGuideController {
 
 //	@Autowired
@@ -22,13 +23,13 @@ public class TourGuideController {
 	
     @GetMapping("/")
     public String getIndex() {
-        //log
+        log.info("GET /");
         return "Greetings from TourGuide!";
     }
     
     @GetMapping("/getLocation/{userName}")
     public String getLocation(@PathVariable("userName") String userName) {
-        //log
+        log.info("GET /getLocation/{}", userName);
 //    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
 //		return JsonStream.serialize(visitedLocation.location);
 		return "Location of : " + userName;
@@ -45,7 +46,7 @@ public class TourGuideController {
         //    Note: Attraction reward points can be gathered from RewardsCentral
     @GetMapping("/getNearbyAttractions/{userName}")
     public String getNearbyAttractions(@PathVariable("userName") String userName) {
-        //log
+        log.info("GET /getNearbyAttractions/{}", userName);
 //    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
 //    	return JsonStream.serialize(tourGuideService.getNearByAttractions(visitedLocation));
         return "Nearby Attraction of : " + userName;
@@ -53,7 +54,7 @@ public class TourGuideController {
     
     @GetMapping("/getRewards/{userName}")
     public String getRewards(@PathVariable("userName") String userName) {
-        //log
+        log.info("GET /getRewards/{}", userName);
 //    	return JsonStream.serialize(tourGuideService.getUserRewards(getUser(userName)));
         return "Rewards of : " + userName;
     }
@@ -69,14 +70,14 @@ public class TourGuideController {
     //     }
     @GetMapping("/getAllCurrentLocations")
     public String getAllCurrentLocations() {
-    	//log
+    	log.info("GET /getAllCurrentLocations");
 //    	return JsonStream.serialize("");
         return "All current locations";
     }
     
     @GetMapping("/getTripDeals/{userName}")
     public String getTripDeals(@PathVariable("userName") String userName) {
-        //log
+        log.info("GET /getTripDeals/{}", userName);
 //    	List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
 //    	return JsonStream.serialize(providers);
         return "Trip Deals of : " + userName;
