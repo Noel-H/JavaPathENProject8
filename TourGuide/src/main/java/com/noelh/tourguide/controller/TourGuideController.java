@@ -13,20 +13,20 @@ import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("")
 //annotation slf4g
 public class TourGuideController {
 
 //	@Autowired
 //    private TourGuideService tourGuideService;
 	
-    @GetMapping("")
+    @GetMapping("/")
     public String getIndex() {
         //log
         return "Greetings from TourGuide!";
     }
     
-    @GetMapping("getLocation/{userName}")
+    @GetMapping("/getLocation/{userName}")
     public String getLocation(@PathVariable("userName") String userName) {
         //log
 //    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
@@ -43,7 +43,7 @@ public class TourGuideController {
         // The distance in miles between the user's location and each of the attractions.
         // The reward points for visiting each Attraction.
         //    Note: Attraction reward points can be gathered from RewardsCentral
-    @GetMapping("getNearbyAttractions/{userName}")
+    @GetMapping("/getNearbyAttractions/{userName}")
     public String getNearbyAttractions(@PathVariable("userName") String userName) {
         //log
 //    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
@@ -51,7 +51,7 @@ public class TourGuideController {
         return "Nearby Attraction of : " + userName;
     }
     
-    @GetMapping("getRewards/{userName}")
+    @GetMapping("/getRewards/{userName}")
     public String getRewards(@PathVariable("userName") String userName) {
         //log
 //    	return JsonStream.serialize(tourGuideService.getUserRewards(getUser(userName)));
@@ -67,14 +67,14 @@ public class TourGuideController {
     //        "019b04a9-067a-4c76-8817-ee75088c3822": {"longitude":-48.188821,"latitude":74.84371}
     //        ...
     //     }
-    @GetMapping("getAllCurrentLocations")
+    @GetMapping("/getAllCurrentLocations")
     public String getAllCurrentLocations() {
     	//log
 //    	return JsonStream.serialize("");
         return "All current locations";
     }
     
-    @GetMapping("getTripDeals/{userName}")
+    @GetMapping("/getTripDeals/{userName}")
     public String getTripDeals(@PathVariable("userName") String userName) {
         //log
 //    	List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
