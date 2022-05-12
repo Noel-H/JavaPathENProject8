@@ -6,6 +6,7 @@ import com.noelh.tourguide.service.TourGuideService;
 import com.noelh.tourguide.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.jsoniter.output.JsonStream;
@@ -18,8 +19,8 @@ import tripPricer.Provider;
 @Slf4j
 public class TourGuideController {
 
-//	@Autowired
-//    private TourGuideService tourGuideService;
+	@Autowired
+    private TourGuideService tourGuideService;
 	
     @GetMapping("/")
     public String getIndex() {
@@ -28,11 +29,16 @@ public class TourGuideController {
     }
     
     @GetMapping("/getLocation/{userName}")
-    public String getLocation(@PathVariable("userName") String userName) {
+    public ResponseEntity<String> getLocation(@PathVariable("userName") String userName) {
         log.info("GET /getLocation/{}", userName);
-//    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-//		return JsonStream.serialize(visitedLocation.location);
-		return "Location of : " + userName;
+        VisitedLocation visitedLocation;
+        try {
+            visitedLocation = tourGuideService.getUserLocation(tourGuideService.getUser(userName));
+        } catch (NullPointerException e) {
+        log.error("GET /getLocation/{} - ERROR : {} - UserName : {}, not found", userName, e.getMessage(), userName);
+        return ResponseEntity.notFound().build();
+        }
+		return ResponseEntity.ok(JsonStream.serialize(visitedLocation.location));
     }
     
     //  TODO: Change this method to no longer return a List of Attractions.
