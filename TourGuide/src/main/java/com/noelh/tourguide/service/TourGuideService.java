@@ -2,16 +2,11 @@ package com.noelh.tourguide.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.noelh.tourguide.dto.ClosestAttractionDTO;
 import com.noelh.tourguide.helper.InternalTestHelper;
 import com.noelh.tourguide.model.User;
 import com.noelh.tourguide.model.UserReward;
@@ -90,15 +85,18 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
-	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
-		List<Attraction> nearbyAttractions = new ArrayList<>();
-		for(Attraction attraction : gpsUtil.getAttractions()) {
-			if(rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
-				nearbyAttractions.add(attraction);
-			}
-		}
-		
-		return nearbyAttractions;
+	public List<ClosestAttractionDTO> getClosestAttractions(VisitedLocation visitedLocation) {
+		return gpsUtil.getAttractions().stream()
+				.map(attraction -> new ClosestAttractionDTO(
+							attraction.attractionName,
+							new Location(attraction.latitude,attraction.longitude),
+							visitedLocation.location,
+							rewardsService.getDistance(visitedLocation.location,new Location(attraction.latitude,attraction.longitude)),
+							"reward point"
+					))
+				.sorted(Comparator.comparing(ClosestAttractionDTO::getDistanceBetweenUserAndAttraction))
+				.limit(5)
+				.collect(Collectors.toList());
 	}
 	
 	private void addShutDownHook() {
@@ -152,5 +150,4 @@ public class TourGuideService {
 		LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));
 	    return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
 	}
-	
 }
