@@ -12,5 +12,5 @@ public class ClosestAttractionDTO {
     private Location location;
     private Location userLocation;
     private Double distanceBetweenUserAndAttraction;
-    private String rewardPoint;
+    private Integer rewardPoint;
 }

@@ -85,14 +85,14 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
-	public List<ClosestAttractionDTO> getClosestAttractions(VisitedLocation visitedLocation) {
+	public List<ClosestAttractionDTO> getClosestAttractions(User user) throws NullPointerException{
 		return gpsUtil.getAttractions().stream()
 				.map(attraction -> new ClosestAttractionDTO(
 							attraction.attractionName,
 							new Location(attraction.latitude,attraction.longitude),
-							visitedLocation.location,
-							rewardsService.getDistance(visitedLocation.location,new Location(attraction.latitude,attraction.longitude)),
-							"reward point"
+							user.getLastVisitedLocation().location,
+							rewardsService.getDistance(user.getLastVisitedLocation().location,new Location(attraction.latitude,attraction.longitude)),
+							rewardsService.getRewardPoints(attraction, user)
 					))
 				.sorted(Comparator.comparing(ClosestAttractionDTO::getDistanceBetweenUserAndAttraction))
 				.limit(5)
