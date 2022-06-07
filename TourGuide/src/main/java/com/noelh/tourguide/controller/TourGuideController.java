@@ -2,6 +2,7 @@ package com.noelh.tourguide.controller;
 
 import com.jsoniter.output.JsonStream;
 import com.noelh.tourguide.dto.ClosestAttractionDTO;
+import com.noelh.tourguide.model.UserReward;
 import com.noelh.tourguide.service.TourGuideService;
 import gpsUtil.location.VisitedLocation;
 import lombok.extern.slf4j.Slf4j;
@@ -55,10 +56,16 @@ public class TourGuideController {
     }
 
     @GetMapping("/getRewards/{userName}")
-    public String getRewards(@PathVariable("userName") String userName) {
+    public ResponseEntity<String> getRewards(@PathVariable("userName") String userName) {
         log.info("GET /getRewards/{}", userName);
-//    	return JsonStream.serialize(tourGuideService.getUserRewards(getUser(userName)));
-        return "Rewards of : " + userName;
+        List<UserReward> userRewardList;
+        try {
+            userRewardList = tourGuideService.getUserRewards(tourGuideService.getUser(userName));
+        } catch (NullPointerException e){
+            log.error("GET /getRewards/{} - ERROR : {} - UserName : {}, not found",userName, e.getMessage(), userName);
+            return  ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(JsonStream.serialize(userRewardList));
     }
 
     // TODO: Get a list of every user's most recent location as JSON
