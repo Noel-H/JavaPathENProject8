@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tripPricer.Provider;
 
 import java.util.List;
 
@@ -75,15 +76,15 @@ public class TourGuideController {
     }
 
     @GetMapping("/getTripDeals/{userName}")
-    public String getTripDeals(@PathVariable("userName") String userName) {
+    public ResponseEntity<String> getTripDeals(@PathVariable("userName") String userName) {
         log.info("GET /getTripDeals/{}", userName);
-//    	List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
-//    	return JsonStream.serialize(providers);
-        return "Trip Deals of : " + userName;
+        List<Provider> providers;
+        try {
+            providers = tourGuideService.getTripDeals(tourGuideService.getUser(userName));
+        } catch (NullPointerException e){
+            log.error("GET /getTripDeals/{} - ERROR : {} - UserName : {}, not found",userName, e.getMessage(), userName);
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(JsonStream.serialize(providers));
     }
-
-    // need to move that method in a service
-//    private User getUser(String userName) {
-//    	return tourGuideService.getUser(userName);
-//    }
 }
