@@ -16,6 +16,9 @@ import tripPricer.Provider;
 
 import java.util.List;
 
+/**
+ * TourGuide Controller
+ */
 @RestController
 @RequestMapping("")
 @Slf4j
@@ -24,12 +27,21 @@ public class TourGuideController {
     @Autowired
     private TourGuideService tourGuideService;
 
+    /**
+     * Get /
+     * @return A String
+     */
     @GetMapping("/")
     public String getIndex() {
         log.info("GET /");
         return "Greetings from TourGuide!";
     }
 
+    /**
+     * Get /getLocation/{userName}
+     * @param userName is used to identify the user
+     * @return the last visited location of the user
+     */
     @GetMapping("/getLocation/{userName}")
     public ResponseEntity<String> getLocation(@PathVariable("userName") String userName) {
         log.info("GET /getLocation/{}", userName);
@@ -43,6 +55,11 @@ public class TourGuideController {
         return ResponseEntity.ok(JsonStream.serialize(visitedLocation.location));
     }
 
+    /**
+     * Get /getClosestAttractions/{userName}
+     * @param userName is used to identify the user
+     * @return a list of 5 closest attraction for the user
+     */
     @GetMapping("/getClosestAttractions/{userName}")
     public ResponseEntity<String> getClosestAttractions(@PathVariable("userName") String userName) {
         log.info("GET /getClosestAttractions/{}", userName);
@@ -56,6 +73,11 @@ public class TourGuideController {
         return ResponseEntity.ok(JsonStream.serialize(closestAttractionsList));
     }
 
+    /**
+     * Get /getRewards/{userName}
+     * @param userName is used to identify the user
+     * @return a list of reward for the user
+     */
     @GetMapping("/getRewards/{userName}")
     public ResponseEntity<String> getRewards(@PathVariable("userName") String userName) {
         log.info("GET /getRewards/{}", userName);
@@ -69,12 +91,21 @@ public class TourGuideController {
         return ResponseEntity.ok(JsonStream.serialize(userRewardList));
     }
 
+    /**
+     * Get /getAllCurrentLocations
+     * @return a list of last visited location from all user
+     */
     @GetMapping("/getAllCurrentLocations")
     public ResponseEntity<String> getAllCurrentLocations() {
         log.info("GET /getAllCurrentLocations");
         return ResponseEntity.ok(JsonStream.serialize(tourGuideService.getAllCurrentLocations()));
     }
 
+    /**
+     * Get /getTripDeals/{userName}
+     * @param userName is used to identify the user
+     * @return a list of provider for the user
+     */
     @GetMapping("/getTripDeals/{userName}")
     public ResponseEntity<String> getTripDeals(@PathVariable("userName") String userName) {
         log.info("GET /getTripDeals/{}", userName);
