@@ -1,10 +1,9 @@
 package com.noelh.tourguide.configuration;
 
 import com.noelh.tourguide.service.RewardsService;
+import gpsUtil.GpsUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import gpsUtil.GpsUtil;
 import rewardCentral.RewardCentral;
 
 @Configuration
@@ -24,5 +23,4 @@ public class TourGuideModule {
 	public RewardCentral getRewardCentral() {
 		return new RewardCentral();
 	}
-	
 }
