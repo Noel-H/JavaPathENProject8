@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.noelh.tourguide.model.User;
 import com.noelh.tourguide.model.UserReward;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
@@ -14,19 +15,19 @@ import rewardCentral.RewardCentral;
 
 @Service
 public class RewardsService {
+
+	@Autowired
+	private GpsUtil gpsUtil;
+
+	@Autowired
+	private RewardCentral rewardsCentral;
+
     private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
 	// proximity in miles
     private int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
 	private int attractionProximityRange = 200;
-	private final GpsUtil gpsUtil;
-	private final RewardCentral rewardsCentral;
-	
-	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
-		this.gpsUtil = gpsUtil;
-		this.rewardsCentral = rewardCentral;
-	}
 	
 	public void setProximityBuffer(int proximityBuffer) {
 		this.proximityBuffer = proximityBuffer;

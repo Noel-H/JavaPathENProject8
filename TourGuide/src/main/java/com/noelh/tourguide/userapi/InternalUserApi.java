@@ -2,6 +2,7 @@ package com.noelh.tourguide.userapi;
 
 import com.noelh.tourguide.helper.InternalTestHelper;
 import com.noelh.tourguide.model.User;
+import com.noelh.tourguide.tracker.Tracker;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +16,9 @@ import java.util.stream.IntStream;
 
 @Component
 @Slf4j
-public class InternalUserApi implements CommandLineRunner{
+public class InternalUserApi {
 
-	@Override
-	public void run(String... args) throws Exception {
-    	runInitializeInternalUsers();
-	}
+	boolean testMode = true;
 
 	public String getTripPricerApiKey(){
 		return tripPricerApiKey;
@@ -30,15 +28,26 @@ public class InternalUserApi implements CommandLineRunner{
 		return internalUserMap;
 	}
 
-    public User getInternalUserMap(String userName) {
-        return internalUserMap.get(userName);
-    }
-
-    public void runInitializeInternalUsers(){
-		initializeInternalUsers();
+	public User getInternalUserMap(String userName) {
+		return internalUserMap.get(userName);
 	}
 
-    	/**********************************************************************************
+	public void runInitializeInternalUsers(){
+		if (testMode){
+			log.info("TestMode enabled");
+			log.debug("Initializing users");
+			initializeInternalUsers();
+			log.debug("Finished initializing users");
+		}
+	}
+
+	public void addUser(User user) {
+		if(!internalUserMap.containsKey(user.getUserName())) {
+			internalUserMap.put(user.getUserName(), user);
+		}
+	}
+
+	/**********************************************************************************
 	 *
 	 * Methods Below: For Internal Testing
 	 *
@@ -46,7 +55,7 @@ public class InternalUserApi implements CommandLineRunner{
 	private static final String tripPricerApiKey = "test-server-api-key";
 	// Database connection will be used for external users, but for testing purposes internal users are provided and stored in memory
 	private final Map<String, User> internalUserMap = new HashMap<>();
-    private void initializeInternalUsers() {
+	private void initializeInternalUsers() {
 		IntStream.range(0, InternalTestHelper.getInternalUserNumber()).forEach(i -> {
 			String userName = "internalUser" + i;
 			String phone = "000";

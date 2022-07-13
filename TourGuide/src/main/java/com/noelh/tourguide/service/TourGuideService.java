@@ -37,8 +37,11 @@ public class TourGuideService {
 	@Autowired
 	private InternalUserApi internalUserApi;
 
-	public TripPricer tripPricer = new TripPricer();
-	public Tracker tracker = new Tracker(this);
+	@Autowired
+	private Tracker tracker;
+
+	@Autowired
+	private TripPricer tripPricer;
 
 		public List<User> getAllUsers() {
 		return internalUserApi.getInternalUserMap().values().stream().collect(Collectors.toList());
@@ -97,35 +100,16 @@ public class TourGuideService {
 		return providers;
 	}
 
+		public void addShutDownHook() {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				tracker.stopTracking();
+			}
+		});
+	}
 
-//	boolean testMode = true;
-//
-//	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
-//		this.gpsUtil = gpsUtil;
-//		this.rewardsService = rewardsService;
-//
-//		if(testMode) {
-//			logger.info("TestMode enabled");
-//			logger.debug("Initializing users");
-//			initializeInternalUsers();
-//			logger.debug("Finished initializing users");
-//		}
-//		tracker = new Tracker(this);
-//		addShutDownHook();
-//	}
-//
-//	public void addUser(User user) {
-//		if(!internalUserMap.containsKey(user.getUserName())) {
-//			internalUserMap.put(user.getUserName(), user);
-//		}
-//	}
-//
-//	private void addShutDownHook() {
-//		Runtime.getRuntime().addShutdownHook(new Thread() {
-//			public void run() {
-//				tracker.stopTracking();
-//			}
-//		});
-//	}
-//
+	public void addUser(User user){
+			internalUserApi.addUser(user);
+	}
+
 }
