@@ -16,13 +16,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class Tracker extends Thread {
 
-	@Autowired
-	private TourGuideService tourGuideService;
-
 	private Logger logger = LoggerFactory.getLogger(Tracker.class);
 	private static final long trackingPollingInterval = TimeUnit.MINUTES.toSeconds(5);
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private boolean stop = false;
+	private TourGuideService tourGuideService;
+
+	public Tracker(TourGuideService tourGuideService){
+		this.tourGuideService = tourGuideService;
+	}
 
 	public void runExecutorService(){
 		executorService.submit(this);
@@ -48,7 +50,7 @@ public class Tracker extends Thread {
 			List<User> users = tourGuideService.getAllUsers();
 			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 			stopWatch.start();
-			users.forEach(u -> tourGuideService.trackUserLocation(u));
+			trackAllUser(users);
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
 			stopWatch.reset();
@@ -60,5 +62,9 @@ public class Tracker extends Thread {
 			}
 		}
 		
+	}
+
+	public void trackAllUser(List<User> users) {
+		users.forEach(u -> tourGuideService.trackUserLocation(u));
 	}
 }

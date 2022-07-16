@@ -28,20 +28,22 @@ import java.util.stream.IntStream;
 @Slf4j
 public class TourGuideService {
 
-	@Autowired
-	private GpsUtil gpsUtil;
-
-	@Autowired
-	private RewardsService rewardsService;
-
-	@Autowired
-	private InternalUserApi internalUserApi;
 
 	@Autowired
 	private Tracker tracker;
 
 	@Autowired
 	private TripPricer tripPricer;
+
+	private GpsUtil gpsUtil;
+	private RewardsService rewardsService;
+	private InternalUserApi internalUserApi;
+
+	public TourGuideService(GpsUtil gpsUtil,RewardsService rewardsService,InternalUserApi internalUserApi){
+		this.gpsUtil = gpsUtil;
+		this.rewardsService = rewardsService;
+		this.internalUserApi = internalUserApi;
+	}
 
 	public List<User> getAllUsers() {
 		return internalUserApi.getInternalUserMap().values().stream().collect(Collectors.toList());

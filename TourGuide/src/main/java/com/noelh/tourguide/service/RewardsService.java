@@ -16,11 +16,15 @@ import rewardCentral.RewardCentral;
 @Service
 public class RewardsService {
 
-	@Autowired
 	private GpsUtil gpsUtil;
-
-	@Autowired
 	private RewardCentral rewardsCentral;
+
+	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral){
+		this.gpsUtil = gpsUtil;
+		this.rewardsCentral = rewardCentral;
+	}
+
+
 
 	private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
