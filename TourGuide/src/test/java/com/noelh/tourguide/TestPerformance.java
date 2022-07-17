@@ -1,30 +1,19 @@
 package com.noelh.tourguide;
 
-import com.noelh.tourguide.helper.InternalTestHelper;
 import com.noelh.tourguide.model.User;
 import com.noelh.tourguide.service.RewardsService;
 import com.noelh.tourguide.service.TourGuideService;
 import com.noelh.tourguide.tracker.Tracker;
 import com.noelh.tourguide.userapi.InternalUserApi;
 import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
 import org.junit.Test;
 import org.springframework.util.StopWatch;
 import rewardCentral.RewardCentral;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 public class TestPerformance {
 
@@ -104,7 +93,7 @@ public class TestPerformance {
 //	}
 
 	@Test
-	public void highVolumeTrackLocation() throws InterruptedException {
+	public void highVolumeTrackLocation() {
 		//Given
 		// chrono
 		StopWatch stopWatch = new StopWatch();
@@ -119,6 +108,7 @@ public class TestPerformance {
 		Tracker tracker = new Tracker(tourGuideService);
 		internalUserApi.runInitializeInternalUsers();
 		List<User> userList = tourGuideService.getAllUsers();
+		userList.forEach(User::clearVisitedLocations);
 		//When
 		//start chrono
 		stopWatch.start();
@@ -130,11 +120,25 @@ public class TestPerformance {
 		//Then
 		//assert result chrono
 		assertThat(stopWatch.getTotalTimeMillis()).isLessThan(timeLimitOf15Minutes);
-		System.out.println(stopWatch.getTotalTimeMillis());
+		System.out.println("StopWatch time = " + stopWatch.getTotalTimeMillis());
+		userList.forEach(user ->
+				assertThat(user.getVisitedLocations().size()).isEqualTo(1));
 	}
 
 //    @Test
 //    public void highVolumeGetRewards() {
-//     }
+//		//Given
+//		StopWatch stopWatch = new StopWatch();
+//		long timeLimitOf20Minutes = 1200000;
+//
+//		//When
+//		stopWatch.start();
+//
+//		stopWatch.stop();
+//
+//		//Then
+//		assertThat(stopWatch.getTotalTimeMillis()).isLessThan(timeLimitOf20Minutes);
+//		System.out.println(stopWatch.getTotalTimeMillis());
+//	}
 
 }
