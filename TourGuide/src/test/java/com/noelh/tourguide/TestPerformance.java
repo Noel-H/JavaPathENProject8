@@ -93,7 +93,7 @@ public class TestPerformance {
 //	}
 
 	@Test
-	public void highVolumeTrackLocation() {
+	public void highVolumeTrackLocation() throws InterruptedException {
 		//Given
 		// chrono
 		StopWatch stopWatch = new StopWatch();

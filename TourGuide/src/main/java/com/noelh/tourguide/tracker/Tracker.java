@@ -10,7 +10,6 @@ import com.noelh.tourguide.model.User;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,7 +28,7 @@ public class Tracker extends Thread {
 	public void runExecutorService(){
 		executorService.submit(this);
 	}
-	
+
 	/**
 	 * Assures to shut down the Tracker thread
 	 */
@@ -37,7 +36,7 @@ public class Tracker extends Thread {
 		stop = true;
 		executorService.shutdownNow();
 	}
-	
+
 	@Override
 	public void run() {
 		StopWatch stopWatch = new StopWatch();
@@ -46,13 +45,13 @@ public class Tracker extends Thread {
 				logger.debug("Tracker stopping");
 				break;
 			}
-			
+
 			List<User> users = tourGuideService.getAllUsers();
 			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 			stopWatch.start();
 			trackAllUser(users);
 			stopWatch.stop();
-			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
+			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
 			stopWatch.reset();
 			try {
 				logger.debug("Tracker sleeping");
@@ -61,10 +60,21 @@ public class Tracker extends Thread {
 				break;
 			}
 		}
-		
+
 	}
 
 	public void trackAllUser(List<User> users) {
-		users.forEach(u -> tourGuideService.trackUserLocation(u));
+		ExecutorService executorServiceMulti = Executors.newFixedThreadPool(200);
+		for (User user : users) {
+			executorServiceMulti.submit(new TrackUser(tourGuideService,user));
+		}
+		executorServiceMulti.shutdown();
+		try {
+			executorServiceMulti.awaitTermination(25,TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			logger.error("Tracking interrupted");
+		}
+
 	}
+
 }
