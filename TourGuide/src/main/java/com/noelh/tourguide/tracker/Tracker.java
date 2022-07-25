@@ -53,6 +53,12 @@ public class Tracker extends Thread {
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
 			stopWatch.reset();
+			logger.debug("Begin Calculation. Calcul " + users.size() + " users.");
+			stopWatch.start();
+			calculateAllUserRewards(users);
+			stopWatch.stop();
+			logger.debug("Calculation Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
+			stopWatch.reset();
 			try {
 				logger.debug("Tracker sleeping");
 				TimeUnit.SECONDS.sleep(trackingPollingInterval);
@@ -74,7 +80,19 @@ public class Tracker extends Thread {
 		} catch (InterruptedException e) {
 			logger.error("Tracking interrupted");
 		}
+	}
 
+	public void calculateAllUserRewards(List<User> users) {
+		ExecutorService executorService2 = Executors.newFixedThreadPool(200);
+		for (User user : users) {
+			executorService2.submit(new CalculateUserRewards(tourGuideService,user));
+		}
+		executorService2.shutdown();
+		try {
+			executorService2.awaitTermination(25,TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			logger.error("Calculation interrupted");
+		}
 	}
 
 }

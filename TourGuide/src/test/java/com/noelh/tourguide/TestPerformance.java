@@ -12,6 +12,7 @@ import rewardCentral.RewardCentral;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,7 +64,7 @@ public class TestPerformance {
 //	}
 
 
-//	@Ignore
+////	@Ignore
 //	@Test
 //	public void highVolumeGetRewards() {
 //		GpsUtil gpsUtil = new GpsUtil();
@@ -120,25 +121,39 @@ public class TestPerformance {
 		//Then
 		//assert result chrono
 		assertThat(stopWatch.getTotalTimeMillis()).isLessThan(timeLimitOf15Minutes);
-		System.out.println("StopWatch time = " + stopWatch.getTotalTimeMillis());
+		System.out.println("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTotalTimeMillis()) + " seconds.");
 		userList.forEach(user ->
 				assertThat(user.getVisitedLocations().size()).isEqualTo(1));
 	}
 
-//    @Test
-//    public void highVolumeGetRewards() {
-//		//Given
-//		StopWatch stopWatch = new StopWatch();
-//		long timeLimitOf20Minutes = 1200000;
-//
-//		//When
-//		stopWatch.start();
-//
-//		stopWatch.stop();
-//
-//		//Then
-//		assertThat(stopWatch.getTotalTimeMillis()).isLessThan(timeLimitOf20Minutes);
-//		System.out.println(stopWatch.getTotalTimeMillis());
-//	}
+    @Test
+    public void highVolumeGetRewards() {
+		//Given
+		StopWatch stopWatch = new StopWatch();
+		long timeLimitOf20Minutes = 1200000;
+
+		Locale.setDefault(Locale.US);
+		GpsUtil gpsUtil = new GpsUtil();
+		RewardCentral rewardCentral = new RewardCentral();
+		RewardsService rewardsService = new RewardsService(gpsUtil,rewardCentral);
+		InternalUserApi internalUserApi = new InternalUserApi();
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, internalUserApi);
+		Tracker tracker = new Tracker(tourGuideService);
+		internalUserApi.runInitializeInternalUsers();
+		List<User> userList = tourGuideService.getAllUsers();
+		userList.forEach(User::clearUserRewards);
+//		when(rewardsService.nearAttraction(any(), any())).thenReturn(true);
+
+		//When
+		stopWatch.start();
+		tracker.calculateAllUserRewards(userList);
+		stopWatch.stop();
+
+		//Then
+		assertThat(stopWatch.getTotalTimeMillis()).isLessThan(timeLimitOf20Minutes);
+		System.out.println("Calculation Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTotalTimeMillis()) + " seconds.");
+//		userList.forEach(user ->
+//				assertThat(user.getUserRewards().size()).isEqualTo(1));
+	}
 
 }
