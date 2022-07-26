@@ -9,9 +9,6 @@ build-job:
   stage: build
   script:
     - gradle assemble -p TourGuide
-  artifacts:
-    paths:
-    - build/executable-binary-file-v1
 
 unit-test-job:
   stage: test
@@ -21,4 +18,7 @@ unit-test-job:
 deploy:
   stage: deploy
   script:
-    - echo "deploy"
+    - gradle build -x test -p TourGuide
+  artifacts:
+    paths:
+          - TourGuide/build/tourguide-app
