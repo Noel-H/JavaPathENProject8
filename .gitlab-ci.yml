@@ -2,7 +2,7 @@ image: gradle:4.8.1
 
 stages:
   - build
-  - test
+#  - test
   - deploy
 
 build-job:
@@ -10,10 +10,10 @@ build-job:
   script:
     - gradle assemble -p TourGuide
 
-unit-test-job:
-  stage: test
-  script:
-    - gradle check -p TourGuide
+#unit-test-job:
+#  stage: test
+#  script:
+#    - gradle check -p TourGuide
 
 deploy:
   stage: deploy
@@ -22,4 +22,4 @@ deploy:
     - ls
   artifacts:
     paths:
-          - /build/TourGuide/Application
+          - TourGuide/Application
