@@ -18,8 +18,8 @@ unit-test-job:
 deploy:
   stage: deploy
   script:
-    - gradle build -x test -p TourGuide
+    - gradle bootJar -p TourGuide
     - ls
   artifacts:
     paths:
-          - /build/TourGuide/tourguide-app
+          - /
