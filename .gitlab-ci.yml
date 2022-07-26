@@ -8,7 +8,7 @@ stages:
 build-job:
   stage: build
   script:
-    - gradle build -p /TourGuide/
+    - gradle build -p TourGuide
 
 unit-test-job:
   stage: test
