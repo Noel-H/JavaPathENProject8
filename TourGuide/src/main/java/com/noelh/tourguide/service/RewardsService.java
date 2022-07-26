@@ -60,7 +60,7 @@ public class RewardsService {
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
 
-	public boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
+	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
 	}
 

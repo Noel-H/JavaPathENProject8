@@ -78,10 +78,6 @@ public class User {
 	public List<UserReward> getUserRewards() {
 		return userRewards;
 	}
-
-	public void clearUserRewards() {
-		userRewards.clear();
-	}
 	
 	public UserPreferences getUserPreferences() {
 		return userPreferences;
