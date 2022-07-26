@@ -22,4 +22,4 @@ deploy:
     - ls
   artifacts:
     paths:
-          - /
+          - /build/TourGuide/Application
