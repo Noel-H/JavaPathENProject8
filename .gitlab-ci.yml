@@ -19,7 +19,6 @@ deploy:
   stage: deploy
   script:
     - gradle bootJar -p TourGuide
-    - ls
   artifacts:
     paths:
-          - TourGuide/Application
+          - TourGuide/build/libs/tourGuide-1.0.0.jar
