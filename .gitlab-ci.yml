@@ -13,7 +13,7 @@ build-job:
 unit-test-job:
   stage: test
   script:
-    - echo "test"
+    - gradle check -p TourGuide
 
 deploy:
   stage: deploy
