@@ -21,4 +21,4 @@ deploy:
     - gradle build -x test -p TourGuide
   artifacts:
     paths:
-          - /builds/TourGuide/tourguide-app
+          - build/TourGuide/tourguide-app
