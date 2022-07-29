@@ -9,6 +9,7 @@ import gpsUtil.GpsUtil;
 import org.junit.Test;
 import org.springframework.util.StopWatch;
 import rewardCentral.RewardCentral;
+import tripPricer.TripPricer;
 
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +28,8 @@ public class TestPerformance {
 		RewardCentral rewardCentral = new RewardCentral();
 		RewardsService rewardsService = new RewardsService(gpsUtil,rewardCentral);
 		InternalUserApi internalUserApi = new InternalUserApi();
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, internalUserApi);
+		TripPricer tripPricer = new TripPricer();
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, internalUserApi, tripPricer);
 		Tracker tracker = new Tracker(tourGuideService);
 		internalUserApi.runInitializeInternalUsers();
 		List<User> userList = tourGuideService.getAllUsers();
@@ -53,7 +55,8 @@ public class TestPerformance {
 		RewardCentral rewardCentral = new RewardCentral();
 		RewardsService rewardsService = new RewardsService(gpsUtil,rewardCentral);
 		InternalUserApi internalUserApi = new InternalUserApi();
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, internalUserApi);
+		TripPricer tripPricer = new TripPricer();
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, internalUserApi,tripPricer);
 		Tracker tracker = new Tracker(tourGuideService);
 		internalUserApi.runInitializeInternalUsers();
 		List<User> userList = tourGuideService.getAllUsers();

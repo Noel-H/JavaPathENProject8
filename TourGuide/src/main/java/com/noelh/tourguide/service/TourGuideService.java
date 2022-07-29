@@ -2,7 +2,6 @@ package com.noelh.tourguide.service;
 
 import com.noelh.tourguide.dto.ClosestAttractionDTO;
 import com.noelh.tourguide.dto.CurrentLocationDTO;
-import com.noelh.tourguide.helper.InternalTestHelper;
 import com.noelh.tourguide.model.User;
 import com.noelh.tourguide.model.UserReward;
 import com.noelh.tourguide.tracker.Tracker;
@@ -11,38 +10,32 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 @Slf4j
 public class TourGuideService {
 
-
 	@Autowired
 	private Tracker tracker;
-
-	@Autowired
-	private TripPricer tripPricer;
 
 	private GpsUtil gpsUtil;
 	private RewardsService rewardsService;
 	private InternalUserApi internalUserApi;
+	private TripPricer tripPricer;
 
-	public TourGuideService(GpsUtil gpsUtil,RewardsService rewardsService,InternalUserApi internalUserApi){
+	public TourGuideService(GpsUtil gpsUtil,RewardsService rewardsService,InternalUserApi internalUserApi,TripPricer tripPricer){
 		this.gpsUtil = gpsUtil;
 		this.rewardsService = rewardsService;
 		this.internalUserApi = internalUserApi;
+		this.tripPricer = tripPricer;
 	}
 
 	public List<User> getAllUsers() {
