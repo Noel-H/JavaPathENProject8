@@ -6,6 +6,7 @@ import com.noelh.tourguide.service.TourGuideService;
 import com.noelh.tourguide.tracker.Tracker;
 import com.noelh.tourguide.userapi.InternalUserApi;
 import gpsUtil.GpsUtil;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.util.StopWatch;
 import rewardCentral.RewardCentral;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Ignore
 public class TestPerformance {
 
 	@Test
